@@ -71,30 +71,34 @@ if st.button("Verificar Qualidade", type="primary"):
                 p = geo_res['results'][0]
                 lat, lon, city_name = p['latitude'], p['longitude'], p['name']
                 
-                aq_res = requests.get("https://air-quality-api.open-meteo.com/v1/air-quality", 
-                                      params={"latitude": lat, "longitude": lon, "current": "pm2_5,nitrogen_dioxide,ozone", "hourly": "pm2_5,nitrogen_dioxide,ozone", "past_days": 1}).json()
+                # --- CHAMADA DA API ATUALIZADA (COM FORECAST) ---
+                aq_res = requests.get(
+                    "https://air-quality-api.open-meteo.com/v1/air-quality", 
+                    params={
+                        "latitude": lat, 
+                        "longitude": lon, 
+                        "current": "pm2_5,nitrogen_dioxide,ozone", 
+                        "hourly": "pm2_5,nitrogen_dioxide,ozone", 
+                        "past_days": 1,
+                        "forecast_days": 3
+                    }
+                ).json()
                 
                 # Exibição dos cards
                 curr = aq_res.get('current', {})
                 vals = {'pm2_5': curr.get('pm2_5'), 'nitrogen_dioxide': curr.get('nitrogen_dioxide'), 'ozone': curr.get('ozone')}
-                
-                # Dicionário de tradução
-                rotulos = {
-                    'pm2_5': 'Partículas Finas (PM2.5)',
-                    'nitrogen_dioxide': 'Dióxido de Nitrogênio (NO₂)',
-                    'ozone': 'Ozônio (O₃)'
-                }
+                rotulos = {'pm2_5': 'Partículas Finas (PM2.5)', 'nitrogen_dioxide': 'Dióxido de Nitrogênio (NO₂)', 'ozone': 'Ozônio (O₃)'}
                 
                 cols = st.columns(3)
                 for (param, val), col in zip(vals.items(), cols):
                     bg, font = get_color_style(param, val)
-                    # Usamos o dicionário 'rotulos' para pegar o nome em português
                     titulo = rotulos.get(param, param)
                     col.markdown(f"<div style='background:{bg}; color:{font}; padding:10px; border-radius:5px; text-align:center;'>{titulo}<br><b>{val} µg/m³</b></div>", unsafe_allow_html=True)
                 
                 salvar_no_banco(city_name, vals['pm2_5'], vals['nitrogen_dioxide'], vals['ozone'])
                 
-                
+                # --- GRÁFICO E MAPA ---
+                st.subheader("📈 Monitoramento: Passado, Presente e Futuro")
                 hourly_data = aq_res.get('hourly', {})
                 df_hourly = pd.DataFrame({
                     'Horário': pd.to_datetime(hourly_data.get('time')),
@@ -102,8 +106,10 @@ if st.button("Verificar Qualidade", type="primary"):
                     'Dióxido de Nitrogênio (NO₂)': hourly_data.get('nitrogen_dioxide'),
                     'Ozônio (O₃)': hourly_data.get('ozone')
                 })
-                df_last_24h = df_hourly.tail(24).set_index('Horário')
-                st.line_chart(df_last_24h)
+                
+                st.line_chart(df_hourly.set_index('Horário'))
+                
+                st.subheader("🗺️ Localização")
                 st.map(pd.DataFrame({'lat': [lat], 'lon': [lon]}))
             else:
                 st.error("Cidade não encontrada.")
