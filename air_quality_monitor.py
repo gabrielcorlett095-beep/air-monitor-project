@@ -49,8 +49,20 @@ def ler_historico():
             password=st.secrets["postgres"]["password"],
             port=st.secrets["postgres"]["port"]
         )
+        # Busca os dados do banco
         df = pd.read_sql_query("SELECT cidade, pm2_5, nitrogen_dioxide, ozone, data_hora FROM historico_pesquisas ORDER BY data_hora DESC LIMIT 10;", conn)
         conn.close()
+        
+        # --- CONVERSÃO PARA O FUSO DE BRASÍLIA ---
+        # 1. Converte a coluna para datetime e define que ela está em UTC
+        df['data_hora'] = pd.to_datetime(df['data_hora']).dt.tz_localize('UTC')
+        
+        # 2. Converte para o fuso horário de Brasília (America/Sao_Paulo)
+        df['data_hora'] = df['data_hora'].dt.tz_convert('America/Sao_Paulo')
+        
+        # 3. Formata para uma leitura mais limpa (dia/mês hora:minuto)
+        df['data_hora'] = df['data_hora'].dt.strftime('%d/%m/%Y %H:%M')
+        
         return df
     except:
         return pd.DataFrame()
