@@ -60,9 +60,9 @@ def ler_historico():
         df = df.rename(columns={
             'cidade': 'Cidade',
             'pm2_5': 'PM2.5 (µg/m³)',
-            'nitrogen_dioxide': 'Dióxido de Nitrogênio',
-            'ozone': 'Ozônio',
-            'data_hora': 'Data/Hora'
+            'nitrogen_dioxide': 'Dióxido de Nitrogênio (µg/m³)',
+            'ozone': 'Ozônio (µg/m³)',
+            'data_hora': 'Data e Horário'
         })
         
         # Converte o fuso para Brasília e formata a data
