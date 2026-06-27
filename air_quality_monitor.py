@@ -49,19 +49,25 @@ def ler_historico():
             password=st.secrets["postgres"]["password"],
             port=st.secrets["postgres"]["port"]
         )
-        # Busca os dados do banco
-        df = pd.read_sql_query("SELECT cidade, pm2_5, nitrogen_dioxide, ozone, data_hora FROM historico_pesquisas ORDER BY data_hora DESC LIMIT 10;", conn)
+        
+        # Busca os dados (mantendo os nomes originais do banco)
+        query = "SELECT cidade, pm2_5, nitrogen_dioxide, ozone, data_hora FROM historico_pesquisas ORDER BY data_hora DESC LIMIT 10;"
+        df = pd.read_sql_query(query, conn)
         conn.close()
         
-        # --- CONVERSÃO PARA O FUSO DE BRASÍLIA ---
-        # 1. Converte a coluna para datetime e define que ela está em UTC
-        df['data_hora'] = pd.to_datetime(df['data_hora']).dt.tz_localize('UTC')
+        # --- PADRONIZAÇÃO E TRADUÇÃO ---
+        # Renomeia as colunas para o Português
+        df = df.rename(columns={
+            'cidade': 'Cidade',
+            'pm2_5': 'PM2.5 (µg/m³)',
+            'nitrogen_dioxide': 'Dióxido de Nitrogênio',
+            'ozone': 'Ozônio',
+            'data_hora': 'Data/Hora'
+        })
         
-        # 2. Converte para o fuso horário de Brasília (America/Sao_Paulo)
-        df['data_hora'] = df['data_hora'].dt.tz_convert('America/Sao_Paulo')
-        
-        # 3. Formata para uma leitura mais limpa (dia/mês hora:minuto)
-        df['data_hora'] = df['data_hora'].dt.strftime('%d/%m/%Y %H:%M')
+        # Converte o fuso para Brasília e formata a data
+        df['Data/Hora'] = pd.to_datetime(df['Data/Hora']).dt.tz_localize('UTC').dt.tz_convert('America/Sao_Paulo')
+        df['Data/Hora'] = df['Data/Hora'].dt.strftime('%d/%m/%Y %H:%M')
         
         return df
     except:
