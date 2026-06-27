@@ -165,14 +165,11 @@ with st.expander("📂 Ver Histórico de Pesquisas"):
 with st.sidebar.expander("⚙️ Administração"):
     if st.checkbox("Ativar Modo Administrador"):
         senha = st.text_input("Senha Admin", type="password")
-        
-# --- NOVO BLOCO DE DIAGNÓSTICO ---
         senha_correta = st.secrets.get("ADMIN_PASSWORD")
         
         if senha == "":
             st.sidebar.info("Por favor, digite a senha.")
         elif senha == senha_correta:
-            # SUCESSO: Se a senha bater, mostra o painel de controle
             st.subheader("Painel de Controle")
             id_para_deletar = st.number_input("ID da pesquisa para remover", min_value=1, step=1)
             
@@ -195,28 +192,5 @@ with st.sidebar.expander("⚙️ Administração"):
                 except Exception as e:
                     st.error(f"Erro ao remover: {e}")
         else:
-            # DIAGNÓSTICO: Isso vai te mostrar o erro se a senha não bater
             st.sidebar.error("Senha incorreta.")
-            st.sidebar.write(f"Você digitou: '{senha}'")
-            st.sidebar.write(f"Sistema leu no Secret: '{senha_correta}'")
-            
-            if st.button("Remover pesquisa"):
-                try:
-                    conn = psycopg2.connect(
-                        host=st.secrets["postgres"]["host"],
-                        database=st.secrets["postgres"]["database"],
-                        user=st.secrets["postgres"]["user"],
-                        password=st.secrets["postgres"]["password"],
-                        port=st.secrets["postgres"]["port"]
-                    )
-                    cursor = conn.cursor()
-                    cursor.execute("DELETE FROM historico_pesquisas WHERE id = %s", (id_para_deletar,))
-                    conn.commit()
-                    cursor.close()
-                    conn.close()
-                    st.success(f"Pesquisa ID {id_para_deletar} removida com sucesso!")
-                    st.rerun() # Atualiza a página para refletir a exclusão
-                except Exception as e:
-                    st.error(f"Erro ao remover: {e}")
-        elif senha:
-            st.error("Senha incorreta.")
+            st.sidebar.write(f"Sua senha lida foi: {senha_correta}")
