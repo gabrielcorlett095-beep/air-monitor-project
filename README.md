@@ -13,4 +13,4 @@ Este projeto é uma aplicação web desenvolvida em Python com Streamlit para mo
 - Visualização de dados via gráficos e mapas interativos.
 
 ## Acesso ao Aplicativo
-Clique aqui para acessar o sistema: [🌍 Monitor de Qualidade do Ar Pro](https://air-monitor-project-fvnuezljhgdzlfhrl8mwfb.streamlit.app/)]
+Clique aqui para acessar o sistema: [🌍 Monitor de Qualidade do Ar Pro](https://air-monitor-project-fvnuezljhgdzlfhrl8mwfb.streamlit.app/)
