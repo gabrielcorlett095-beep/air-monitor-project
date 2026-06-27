@@ -13,4 +13,4 @@ Este projeto é uma aplicação web desenvolvida em Python com Streamlit para mo
 - Visualização de dados via gráficos e mapas interativos.
 
 ## Como acessar
-O projeto está disponível em: [INSIRA_SEU_LINK_DO_STREAMLIT_AQUI]
+O projeto está disponível em: [🌍 Monitor de Qualidade do Ar Pro]
