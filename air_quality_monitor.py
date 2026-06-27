@@ -117,9 +117,13 @@ if st.button("Verificar Qualidade", type="primary"):
                 fig = px.line(df_long, x='Horário', y='Concentração', color='Poluente',
                               labels={'Concentração': 'Concentração (µg/m³)'})
                 
-                # Customização do Tooltip
-                fig.update_xaxes(tickformat="%H:%M")
-                fig.update_traces(hovertemplate="<b>%{data.name}</b><br>Horário: %{x|%H:%M}<br>Concentração: %{y:.2f} µg/m³")
+                # --- TOOLTIP COM DATA E HORA ---
+                
+                # O tickformat abaixo garante que o eixo X exiba data e hora
+                fig.update_xaxes(tickformat="%d/%m %H:%M")
+                
+                # No hovertemplate, adicionamos a data (%d/%m) antes do horário (%H:%M)
+                fig.update_traces(hovertemplate="<b>%{data.name}</b><br>Data/Hora: %{x|%d/%m %H:%M}<br>Concentração: %{y:.2f} µg/m³")
                 
                 # Exibição
                 st.plotly_chart(fig, use_container_width=True)
