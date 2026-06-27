@@ -12,5 +12,5 @@ Este projeto é uma aplicação web desenvolvida em Python com Streamlit para mo
 - Histórico de pesquisas persistido em banco de dados (CRUD).
 - Visualização de dados via gráficos e mapas interativos.
 
-## Como acessar
-O projeto está disponível em: [🌍 Monitor de Qualidade do Ar Pro]
+## Acesso ao Aplicativo
+Clique aqui para acessar o sistema: [🌍 Monitor de Qualidade do Ar Pro](https://air-monitor-project-fvnuezljhgdzlfhrl8mwfb.streamlit.app/)]
