@@ -98,7 +98,7 @@ if st.button("Verificar Qualidade", type="primary"):
                 salvar_no_banco(city_name, vals['pm2_5'], vals['nitrogen_dioxide'], vals['ozone'])
                 
                 # --- GRÁFICO E MAPA ---
-                st.subheader("📈 Monitoramento: Passado, Presente e Futuro")
+                st.subheader("📈 Monitoramento da concentração de poluentes")
                 hourly_data = aq_res.get('hourly', {})
                 df_hourly = pd.DataFrame({
                     'Horário': pd.to_datetime(hourly_data.get('time')),
