@@ -94,7 +94,16 @@ if st.button("Verificar Qualidade", type="primary"):
                 
                 salvar_no_banco(city_name, vals['pm2_5'], vals['nitrogen_dioxide'], vals['ozone'])
                 
-                st.line_chart(pd.DataFrame(aq_res['hourly']).tail(24).set_index('time'))
+                
+                hourly_data = aq_res.get('hourly', {})
+                df_hourly = pd.DataFrame({
+                    'Horário': pd.to_datetime(hourly_data.get('time')),
+                    'Partículas Finas (PM2.5)': hourly_data.get('pm2_5'),
+                    'Dióxido de Nitrogênio (NO₂)': hourly_data.get('nitrogen_dioxide'),
+                    'Ozônio (O₃)': hourly_data.get('ozone')
+                })
+                df_last_24h = df_hourly.tail(24).set_index('Horário')
+                st.line_chart(df_last_24h)
                 st.map(pd.DataFrame({'lat': [lat], 'lon': [lon]}))
             else:
                 st.error("Cidade não encontrada.")
