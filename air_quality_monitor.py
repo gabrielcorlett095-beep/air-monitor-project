@@ -50,27 +50,26 @@ def ler_historico():
             port=st.secrets["postgres"]["port"]
         )
         
-        # Busca os dados (mantendo os nomes originais do banco)
         query = "SELECT cidade, pm2_5, nitrogen_dioxide, ozone, data_hora FROM historico_pesquisas ORDER BY data_hora DESC LIMIT 10;"
         df = pd.read_sql_query(query, conn)
         conn.close()
         
-        # --- PADRONIZAÇÃO E TRADUÇÃO ---
-        # Renomeia as colunas para o Português
+        # 1. Renomeia as colunas
         df = df.rename(columns={
             'cidade': 'Cidade',
             'pm2_5': 'PM2.5 (µg/m³)',
             'nitrogen_dioxide': 'Dióxido de Nitrogênio (µg/m³)',
             'ozone': 'Ozônio (µg/m³)',
-            'data_hora': 'Data e Horário'
+            'data_hora': 'Data e Horário' # Nome definido aqui
         })
         
-        # Converte o fuso para Brasília e formata a data
-        df['Data/Hora'] = pd.to_datetime(df['Data/Hora']).dt.tz_localize('UTC').dt.tz_convert('America/Sao_Paulo')
-        df['Data/Hora'] = df['Data/Hora'].dt.strftime('%d/%m/%Y %H:%M')
+        # 2. Usa o MESMO nome ('Data e Horário') para a conversão
+        df['Data e Horário'] = pd.to_datetime(df['Data e Horário']).dt.tz_localize('UTC').dt.tz_convert('America/Sao_Paulo')
+        df['Data e Horário'] = df['Data e Horário'].dt.strftime('%d/%m/%Y %H:%M')
         
         return df
-    except:
+    except Exception as e:
+        # DICA: print(e) ajuda a ver o erro real no console se algo falhar
         return pd.DataFrame()
 
 # --- INTERFACE ---
