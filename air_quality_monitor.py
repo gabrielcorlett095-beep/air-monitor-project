@@ -2,7 +2,7 @@ import streamlit as st
 import requests
 import pandas as pd
 import psycopg2
-
+import plotly.express as px
 st.set_page_config(page_title="Monitor de Ar Pro", page_icon="🌍", layout="centered")
 
 # --- FUNÇÕES ---
@@ -107,7 +107,22 @@ if st.button("Verificar Qualidade", type="primary"):
                     'Ozônio (O₃)': hourly_data.get('ozone')
                 })
                 
-                st.line_chart(df_hourly.set_index('Horário'))
+                # --- GRÁFICO PROFISSIONAL COM PLOTLY ---
+                # Transformação para formato "longo"
+                df_long = df_hourly.melt(id_vars=['Horário'], 
+                                         var_name='Poluente', 
+                                         value_name='Concentração')
+                
+                # Criação da figura
+                fig = px.line(df_long, x='Horário', y='Concentração', color='Poluente',
+                              labels={'Concentração': 'Concentração (µg/m³)'})
+                
+                # Customização do Tooltip
+                fig.update_xaxes(tickformat="%H:%M")
+                fig.update_traces(hovertemplate="<b>%{data.name}</b><br>Horário: %{x|%H:%M}<br>Concentração: %{y:.2f} µg/m³")
+                
+                # Exibição
+                st.plotly_chart(fig, use_container_width=True)
                 
                 st.subheader("🗺️ Localização")
                 st.map(pd.DataFrame({'lat': [lat], 'lon': [lon]}))
