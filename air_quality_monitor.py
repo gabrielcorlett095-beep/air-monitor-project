@@ -88,7 +88,7 @@ if st.button("Verificar Qualidade", type="primary"):
                 p = geo_res['results'][0]
                 lat, lon, city_name = p['latitude'], p['longitude'], p['name']
                 
-                # --- CHAMADA DA API ATUALIZADA (COM FORECAST) ---
+                # --- CHAMADA DA API (COM FORECAST) ---
                 aq_res = requests.get(
                     "https://air-quality-api.open-meteo.com/v1/air-quality", 
                     params={
