@@ -139,7 +139,7 @@ if st.button("Verificar Qualidade", type="primary"):
                 # O tickformat abaixo garante que o eixo X exiba data e hora
                 fig.update_xaxes(tickformat="%d/%m %H:%M")
                 
-                # No hovertemplate, adicionamos a data (%d/%m) antes do horário (%H:%M)
+                # No hovertemplate, adicionei a data (%d/%m) antes do horário (%H:%M)
                 fig.update_traces(hovertemplate="<b>%{data.name}</b><br>Data/Hora: %{x|%d/%m %H:%M}<br>Concentração: %{y:.2f} µg/m³")
                 
                 # Exibição
